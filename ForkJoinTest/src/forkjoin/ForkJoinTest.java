@@ -7,16 +7,16 @@ public class ForkJoinTest {
     public static void main(String[] args) throws Exception {
         final int SIZE = 10000000; // 10 billion
         double[] numbers = new double[SIZE];
+
         for (int i = 0; i < numbers.length; i++) {
             numbers[i] = Math.random();
         }
-        // Counter counter = 
-        
-        
-        
-        
-        // TODO: continue in main method
 
+        Counter counter = new Counter(numbers, 0, numbers.length, (x) -> x > 0.5);
+        ForkJoinPool pool = new ForkJoinPool();
+        pool.invoke(counter);
+
+        System.out.println(counter.join());
     }
 }
 
@@ -44,6 +44,7 @@ class Counter extends RecursiveTask<Integer> {
                     count++;
                 }
             }
+
             return count;
         } else {
             int mid = (from + to) / 2;
@@ -53,5 +54,4 @@ class Counter extends RecursiveTask<Integer> {
             return first.join() + second.join();
         }
     }
-
 }
